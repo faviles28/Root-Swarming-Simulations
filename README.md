@@ -6,7 +6,10 @@ To run simulations, first download NetLogo simulation software [here](https://cc
 
 Once NetLogo is downloaded, go to File -> Open -> .nlogo file you wish to run.
 
-original_research.nlogo contains the simulation for the non-random model of growth proposed by Ciszak et al.
-roots_all.nlogo contains the simulation for the all encompassing model of growth.
-roots_moisture_branching.nlogo contains the simulation for the heterogeneous water with branching model of growth
-roots_moisture_nonbranching.nlogo contains the simulation for the heterogeneous water without branching model of growth
+**original_research.nlogo** contains the simulation for the non-random model of growth proposed by Ciszak et al.
+
+**roots_all.nlogo** contains the simulation for the all encompassing model of growth.
+
+**roots_moisture_branching.nlogo** contains the simulation for the heterogeneous water with branching model of growth
+
+**roots_moisture_nonbranching.nlogo** contains the simulation for the heterogeneous water without branching model of growth
