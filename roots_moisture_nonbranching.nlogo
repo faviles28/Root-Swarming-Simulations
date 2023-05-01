@@ -14,10 +14,12 @@ globals [
   total-soil-moisture
   total-turtles-moisture
   moisture-consumed
+  total-water-by-root
 ]
 
 to setup
   clear-all
+  set total-water-by-root n-values num-seeds [0]
   setup-globals
   setup-seeds
   setup-patches
@@ -31,7 +33,7 @@ to setup-globals
 end
 
 to setup-seeds
-  let next-id 1
+  let next-id 0
   let og-xcor 0
   let current-color green
   create-turtles num-seeds [
@@ -170,26 +172,31 @@ to absorb-moisture
     ]
     if patch-moisture > 0 [
       set water water + patch-moisture
+      let current-water item root-id total-water-by-root
+      let new-sum current-water + patch-moisture
+      set total-water-by-root replace-item root-id total-water-by-root new-sum
       set total-turtles-moisture total-turtles-moisture + patch-moisture
       set moisture-consumed total-turtles-moisture / total-soil-moisture
     ]
   ]
 end
 
+
 to stop-grow
   ask turtles [
     if water <= 0 [ die ]
+    if ticks >= simulation-duration - 1 [ die ]
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-449
+609
 10
-1367
-529
+1384
+448
 -1
 -1
-10.0
+8.43
 1
 10
 1
@@ -210,10 +217,10 @@ ticks
 30.0
 
 SLIDER
-16
-91
-188
-124
+19
+79
+191
+112
 num-seeds
 num-seeds
 1
@@ -225,10 +232,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-1
-22
-72
-55
+4
+10
+75
+43
 Set Up
 setup
 NIL
@@ -242,10 +249,10 @@ NIL
 1
 
 BUTTON
-236
-39
-360
-72
+239
+27
+363
+60
 Run Simulation
 go
 T
@@ -259,10 +266,10 @@ NIL
 1
 
 SLIDER
-15
-260
-187
-293
+18
+248
+190
+281
 max-moisture
 max-moisture
 0
@@ -274,10 +281,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-14
-128
-186
-161
+17
+116
+189
+149
 separation
 separation
 1
@@ -289,10 +296,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-12
-174
-190
-207
+15
+162
+193
+195
 simulation-duration
 simulation-duration
 1
@@ -304,10 +311,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-97
-29
-208
-62
+100
+17
+211
+50
 centered
 centered
 0
@@ -315,10 +322,10 @@ centered
 -1000
 
 SLIDER
-18
-220
-190
-253
+21
+208
+193
+241
 radius
 radius
 1
@@ -330,10 +337,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-210
-97
-382
-130
+213
+85
+385
+118
 constant-velocity
 constant-velocity
 1
@@ -345,10 +352,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-215
-149
-388
-182
+218
+137
+391
+170
 gravitational-force
 gravitational-force
 0.01
@@ -360,10 +367,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-215
-190
-387
-223
+218
+178
+390
+211
 initial-water
 initial-water
 0
@@ -375,10 +382,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-216
-230
-389
-263
+219
+218
+396
+251
 movement-water-lost
 movement-water-lost
 0
@@ -406,6 +413,23 @@ false
 "" ""
 PENS
 "default" 1.0 0 -13345367 true "" "plot (100 * moisture-consumed)"
+
+PLOT
+453
+318
+848
+586
+Individual Root System Water Consumption
+Time
+% Water Consumed
+0.0
+1.0
+0.0
+1.0
+true
+true
+"" "foreach total-water-by-root [ \n    [x] ->\n    let index position x total-water-by-root\n    let pen-string word \"root-\" index\n    if not plot-pen-exists? pen-string [\n         create-temporary-plot-pen pen-string\n         set-plot-pen-color random 100\n    ]\n    create-temporary-plot-pen pen-string\n    plot x / total-soil-moisture * 100\n]"
+PENS
 
 @#$#@#$#@
 ## WHAT IS IT?

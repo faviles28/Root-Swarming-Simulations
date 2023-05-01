@@ -14,10 +14,12 @@ globals [
   total-soil-moisture
   total-turtles-moisture
   moisture-consumed
+  total-water-by-root
 ]
 
 to setup
   clear-all
+  set total-water-by-root n-values num-seeds [0]
   setup-globals
   setup-seeds
   setup-patches
@@ -31,7 +33,7 @@ to setup-globals
 end
 
 to setup-seeds
-  let next-id 1
+  let next-id 0
   let og-xcor 0
   let current-color green
   create-turtles num-seeds [
@@ -170,13 +172,22 @@ to absorb-moisture
       set used-id true
     ]
     if patch-moisture > 0 [
-        set water water + patch-moisture
+      set water water + patch-moisture
+      let current-water item root-id total-water-by-root
+      let new-sum current-water + patch-moisture
+      set total-water-by-root replace-item root-id total-water-by-root new-sum
+      set total-turtles-moisture total-turtles-moisture + patch-moisture
+      set moisture-consumed total-turtles-moisture / total-soil-moisture
     ]
   ]
 end
 
 to natural-branch
   ask turtles [
+    let nearby-turtles other turtles in-radius 1 with [root-id = [root-id] of myself]
+    if any? nearby-turtles [
+      stop
+    ]
     if water > branching-water-needed [
       let branch-var random-float 1
       let nearby-patches patches in-radius 1 with [moisture > 0]
@@ -207,22 +218,18 @@ end
 to stop-grow
   ask turtles [
     if water <= 0 [ die ]
-  ]
-  if ticks >= simulation-duration [
-    ask turtles [
-      die
-    ]
+    if ticks >= simulation-duration - 1 [ die ]
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-446
-10
+643
+12
 1364
-529
+420
 -1
 -1
-10.0
+7.84
 1
 10
 1
@@ -300,7 +307,7 @@ max-moisture
 max-moisture
 0
 50
-25.0
+50.0
 1
 1
 NIL
@@ -356,7 +363,7 @@ radius
 radius
 1
 30
-14.0
+10.0
 1
 1
 NIL
@@ -401,7 +408,7 @@ initial-water
 initial-water
 0
 100
-50.0
+20.0
 1
 1
 NIL
@@ -416,7 +423,7 @@ movement-water-lost
 movement-water-lost
 0
 10
-0.0
+1.0
 0.5
 1
 NIL
@@ -431,7 +438,7 @@ branching-density
 branching-density
 0.01
 1
-0.2
+0.15
 0.01
 1
 NIL
@@ -464,11 +471,28 @@ branching-water-needed
 branching-water-needed
 0
 50
-50.0
+25.0
 1
 1
 NIL
 HORIZONTAL
+
+PLOT
+433
+324
+844
+583
+Individual Root System Water Consumption
+Time
+% Water Consumed
+0.0
+1.0
+0.0
+1.0
+true
+true
+"" "foreach total-water-by-root [\n    [x] ->\n    let index position x total-water-by-root\n    let pen-string word \"root-\" index\n    if not plot-pen-exists? pen-string [\n         create-temporary-plot-pen pen-string\n         set-plot-pen-color random 100\n    ]\n    create-temporary-plot-pen pen-string\n    plot x / total-soil-moisture * 100\n]"
+PENS
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -823,6 +847,53 @@ NetLogo 6.3.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="radius" repetitions="30" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>(100 * moisture-consumed)</metric>
+    <metric>max total-water-by-root - min total-water-by-root</metric>
+    <enumeratedValueSet variable="branching-density">
+      <value value="0.15"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="gravitational-force">
+      <value value="0.06"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="centered">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="constant-velocity">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-water">
+      <value value="20"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="num-seeds">
+      <value value="5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="movement-water-lost">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="separation">
+      <value value="15"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="radius">
+      <value value="1"/>
+      <value value="5"/>
+      <value value="10"/>
+      <value value="25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="branching-water-needed">
+      <value value="25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="max-moisture">
+      <value value="25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simulation-duration">
+      <value value="100"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default

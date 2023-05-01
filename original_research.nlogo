@@ -46,6 +46,7 @@ to go
   set-orientation
   set-velocity
   root-growth
+  stop-grow
   tick
   wait 0.5
 end
@@ -107,6 +108,12 @@ to root-growth
   ask turtles [
     set heading orientation
     fd v
+  ]
+end
+
+to stop-grow
+  ask turtles [
+    if ticks >= simulation-duration - 1 [ die ]
   ]
 end
 @#$#@#$#@
@@ -270,7 +277,7 @@ repulsion-constant1
 repulsion-constant1
 0.1
 1
-0.6
+0.7
 0.1
 1
 NIL
