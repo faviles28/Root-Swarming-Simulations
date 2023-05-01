@@ -21,5 +21,5 @@ Once NetLogo is downloaded, go to File -> Open -> .nlogo file you wish to run.
 
 
 
-Works Cited
+### Works Cited
 Ciszak, Marzena et al. “Swarming behavior in plant roots.” PloS one vol. 7,1 (2012): e29759. doi:10.1371/journal.pone.0029759
