@@ -10,7 +10,7 @@ Once NetLogo is downloaded, go to File -> Open -> .nlogo file you wish to run.
 
 ## Simulations
 
-**original_research.nlogo** contains the simulation for the non-random model of growth proposed by Ciszak et al.
+**original_research.nlogo** contains the simulation for the non-random model of growth proposed by [Ciszak et al.](https://pubmed.ncbi.nlm.nih.gov/22272246/).
 
 **roots_all.nlogo** contains the simulation for the all encompassing model of growth.
 
